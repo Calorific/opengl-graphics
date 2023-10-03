@@ -53,13 +53,14 @@ void display() {
     glEnd();
 
     // рисуем большую точку
-    glPointSize(10);
+    glPointSize(14);
     glBegin(GL_POINTS); 
         glColor3d(0, 0, 1);
-        glVertex3d(-5, -4, 0);
+        glVertex3d(-5, -5, 0);
     glEnd();
-
+    
     // рисуем квадратные точки
+    glPointSize(6);
     glDisable(GL_POINT_SMOOTH);
     glBegin(GL_POINTS);
         glColor3d(1, 0, 0);
