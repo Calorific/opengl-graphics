@@ -154,9 +154,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="colors.cpp" />
     <ClCompile Include="graphics.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="colors.h" />
     <ClInclude Include="glut.h" />
   </ItemGroup>
   <ItemGroup>
