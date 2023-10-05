@@ -21,6 +21,7 @@ void resize(int width, int height) {
 void display() {
     glColor3d(0, 0, 0);
     glPointSize(1);
+    glEnable(GL_POINT_SMOOTH);
     glBegin(GL_POINTS);
         for (int y = 0; y < 800; y++) {
             for (int x = 0; x < 1200; x++) {
@@ -32,7 +33,8 @@ void display() {
                 if (abs(z) >= 2) {
                     HsvColor const hsv{ static_cast<unsigned char>(255 * i / 80), 255, 255 };
                     RgbColor const rgb = HsvToRgb(hsv);
-                    glColor3d(rgb.r,rgb.g,rgb.b);
+                    
+                    glColor3d(static_cast<double>(rgb.r) / 255,static_cast<double>(rgb.g) / 255,static_cast<double>(rgb.b) / 255);
                     glVertex2d(x, y);
                 } else {
                     glColor3d(0, 0, 0);
