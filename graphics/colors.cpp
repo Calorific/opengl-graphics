@@ -10,13 +10,16 @@ RgbColor HsvToRgb(HsvColor const hsv) {
         return rgb;
     }
     
+	// определяем в какой сектор попадает Hue
     unsigned char const region = hsv.h / 43;
     unsigned char const remainder = (hsv.h - (region * 43)) * 6; 
     
+	// считаем соответствующие значения для формата RGB
     unsigned char const p = hsv.v * (255 - hsv.s) >> 8;
     unsigned char const q = hsv.v * (255 - (hsv.s * remainder >> 8)) >> 8;
     unsigned char const t = hsv.v * (255 - (hsv.s * (255 - remainder) >> 8)) >> 8;
     
+	// в зависимости от региона присваиваем значения
     switch (region) {
         case 0:
             rgb.r = hsv.v; rgb.g = t; rgb.b = p;
