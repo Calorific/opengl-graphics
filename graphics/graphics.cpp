@@ -28,7 +28,13 @@ GLfloat texCoords[][2] = {
 
 GLuint textureID; // Идентификатор текстуры
 
-int angle = 3;
+int theta = 3;
+int phi = 10;
+double radius = 3;
+
+int mod(const int x, const int n){
+    return (x % n + n) % n;
+}
 
 // Загрузка текстуры
 void loadTexture(const char* filename) {
@@ -50,9 +56,9 @@ void loadTexture(const char* filename) {
 void polygon(const int a, const int b, const int c, const int d) {
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, textureID);
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
     {
-        glTexCoord2fv(texCoords[0]);  glVertex3fv(vertices[a]);
+        glTexCoord2fv(texCoords[0]); glVertex3fv(vertices[a]);
         glTexCoord2fv(texCoords[1]); glVertex3fv(vertices[b]);
         glTexCoord2fv(texCoords[2]); glVertex3fv(vertices[c]);
         glTexCoord2fv(texCoords[3]); glVertex3fv(vertices[d]);
@@ -63,15 +69,16 @@ void polygon(const int a, const int b, const int c, const int d) {
 
 void colorcube() {
     glEnable(GL_TEXTURE_2D); // Включаем использование текстур
-
     glBindTexture(GL_TEXTURE_2D, textureID);
     
-    polygon(0, 3, 2, 1);
-    polygon(2, 3, 7, 6);
-    polygon(0, 4, 7, 3);
-    polygon(1, 2, 6, 5);
-    polygon(4, 5, 6, 7);
-    polygon(0, 1, 5, 4);
+    glColor3f(1, 1, 1);
+    
+    polygon(1, 0, 3, 2);
+    polygon(2, 6, 5, 1);
+    polygon(3, 7, 6, 2);
+    polygon(0, 4, 5, 1);
+    polygon(0, 3, 7, 4);
+    polygon(7, 6, 5, 4);
     
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -82,7 +89,10 @@ void resize(int h, int w) {
 }
 
 void handleKeypress(const unsigned char key, int x, int y) {
-    if (key == 'r') angle = (angle + 1) % 360;
+    if (key == 'w') phi = mod(phi + 1, 360);
+    else if (key == 'a') theta = mod(theta - 1, 360);
+    else if (key == 's') phi = mod(phi - 1, 360);
+    else if (key == 'd') theta = mod(theta + 1, 360);
     else if (key == 27) exit(EXIT_SUCCESS);
     glutPostRedisplay();
 }
@@ -97,7 +107,11 @@ void display() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    gluLookAt(2*cos(static_cast<double>(angle) / 180 * PI), 0.7, 2*sin(static_cast<double>(angle) / 180 * PI),
+    const double x = radius * sin(theta * PI / 180) * cos(phi * PI / 180);
+    const double y = radius * sin(phi * PI / 180);
+    const double z = radius * cos(theta * PI / 180) * cos(phi * PI / 180);
+    
+    gluLookAt(x, y, z,
         0, 0, 0, 0, 1, 0);
     colorcube();
     
@@ -117,7 +131,7 @@ void init() {
 
 int main() {
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowPosition(50, 10);
+    glutInitWindowPosition(100, 30);
     glutInitWindowSize(width, height);
     glutCreateWindow("Lab 3");
     glutReshapeFunc(resize);
